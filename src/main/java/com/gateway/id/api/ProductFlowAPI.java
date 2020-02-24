@@ -5,21 +5,22 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-//import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.gateway.id.common.UploadFileCommon;
+import com.gateway.id.common.WriteExcelProduct;
 import com.gateway.id.dao.TbProductFlow;
+import com.gateway.id.dao.TbProductFlowHeader;
+import com.gateway.id.dto.DownloadBasicPriceDto;
 import com.gateway.id.dto.TbProductFlowDto;
+import com.gateway.id.service.TbProductFlowHeaderService;
 import com.gateway.id.service.TbProductFlowService;
 import com.google.gson.Gson;
 
@@ -44,6 +48,12 @@ public class ProductFlowAPI {
 
 	@Autowired
 	TbProductFlowService productFlowService;
+
+	@Autowired
+	TbProductFlowHeaderService productFlowHeaderService;
+	
+	@Value("${server.path}")
+	private String serverPath;
 
 	@RequestMapping(path = "/productFlow/ping", method = RequestMethod.GET)
 	public ResponseEntity<String> echo() {
@@ -177,6 +187,28 @@ public class ProductFlowAPI {
 
 	}
 
+	@RequestMapping(path = "/productFlow/pagingFlowHeader", method = RequestMethod.POST)
+	public ResponseEntity<String> pagingFlowHeader(@RequestParam("start") int start, @RequestParam("length") int length,
+			@RequestParam("sort") String sort, @RequestParam("column") String column) {
+
+		String result = "";
+		Page<TbProductFlowHeader> page;
+		Gson gson = new Gson();
+
+		try {
+
+			page = productFlowHeaderService.pagingData(start, length, sort, column);
+
+			result = gson.toJson(page);
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		}
+
+	}
+
 	@RequestMapping(path = "/productFlow/pagingByCustomerCode", method = RequestMethod.POST)
 	public ResponseEntity<String> pagingByCustomerCode(@RequestParam("start") int start,
 			@RequestParam("length") int length, @RequestParam("sort") String sort,
@@ -201,97 +233,83 @@ public class ProductFlowAPI {
 
 	}
 
-	@RequestMapping(value = "/productFlow/uploadFile", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadFile(@RequestBody MultipartFile file) throws IOException {
+	@RequestMapping(path = "/productFlow/pagingBySearch", method = RequestMethod.POST)
+	public ResponseEntity<String> pagingBySearch(@RequestParam("start") int start, @RequestParam("length") int length,
+			@RequestParam("sort") String sort, @RequestParam("column") String column,
+			@RequestParam("customerCode") String customerCode, @RequestParam("customerName") String customerName,
+			@RequestParam("status") Integer status) {
 
-		byte[] bytes = file.getBytes();
-		String fileName = file.getOriginalFilename();
-		String extention = getFileExtension(fileName);
-		File excelFile = null;
-		Boolean validation = validationExtension(extention);
+		String result = "";
+		Page<TbProductFlowHeader> page;
+		Gson gson = new Gson();
 
-		if (file != null) {
-			excelFile = convertMultiPartToFile(file);
+		if (customerCode.equalsIgnoreCase("")) {
+			customerCode = null;
 		}
 
-		if (bytes != null && fileName != null && validation) {
-			try {
+		if (customerName.equalsIgnoreCase("")) {
+			customerName = null;
+		}
 
-				FileInputStream fileInput = new FileInputStream(excelFile);
-				Workbook workbook = WorkbookFactory.create(fileInput);
-				Sheet datatypeSheet = workbook.getSheetAt(0);
-				Iterator<Row> iterator = datatypeSheet.iterator();
+		if (status == null) {
+			status = null;
+		}
 
-				while (iterator.hasNext()) {
+		try {
 
-					Row currentRow = iterator.next();
-					Iterator<Cell> cellIterator = currentRow.iterator();
+			page = productFlowHeaderService.pagingSearchData(start, length, sort, column, customerCode, customerName,
+					status);
 
-					while (cellIterator.hasNext()) {
+			result = gson.toJson(page);
+			return new ResponseEntity<String>(result, HttpStatus.OK);
 
-						Cell currentCell = cellIterator.next();
-						// getCellTypeEnum shown as deprecated for version 3.15
-						// getCellTypeEnum ill be renamed to getCellType starting from version 4.0
-						if (currentCell.getCellTypeEnum() == CellType.STRING) {
-							System.out.print(currentCell.getStringCellValue() + "--");
-						} else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-							System.out.print(currentCell.getNumericCellValue() + "--");
-						}
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		}
 
-					}
-					System.out.println();
+	}
 
-				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+	@RequestMapping(path = "/productFlow/downloadProductFlow", method = RequestMethod.GET)
+	public ResponseEntity<String> downloadProductFlow(@RequestParam("customerCode") String customerCode,
+			HttpServletResponse response) {
+
+		String result = "";
+		List<DownloadBasicPriceDto> list = new ArrayList<>();
+		Gson gson = new Gson();
+
+		WriteExcelProduct excelProduct = new WriteExcelProduct();
+
+		try {
+
+			list = productFlowService.downloadData(customerCode);
+
+			String filepath = excelProduct.generateDataProduct(customerCode, list, serverPath);
+
+			String filename = customerCode + "-" + "basePriceCustomer.xlsx";
+
+			response.setHeader("Content-disposition", "attachment;filename=" + filename);
+			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+			File myFile = new File(filepath);
+			OutputStream out = response.getOutputStream();
+			FileInputStream in = new FileInputStream(myFile);
+			byte[] buffer = new byte[4096];
+			int length;
+			while ((length = in.read(buffer)) > 0) {
+				out.write(buffer, 0, length);
 			}
+			out.flush();
+			in.close();
 
-			return new ResponseEntity<String>("", HttpStatus.OK);
+			result = gson.toJson(filepath);
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+
+		} catch (Exception e) {
+			LOG.error(e.getMessage());
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<String>("", HttpStatus.OK);
-	}
-
-	@RequestMapping(path = "/productFlow/resource", method = RequestMethod.POST)
-	public void resource() {
-
-		String fileName = "Sampleflowbasedpricecustomer.xlsx";
-		ClassLoader classLoader = ProductFlowAPI.class.getClassLoader();
-
-		File file = new File(classLoader.getResource(fileName).getFile());
-
-		// File is found
-		System.out.println("File Found : " + file.exists());
-
-	}
-
-	public static String getFileExtension(String fileExtension) {
-		String fileName = fileExtension;
-		if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
-			return fileName.substring(fileName.lastIndexOf(".") + 1);
-		else
-			return "";
-	}
-
-	public Boolean validationExtension(String fileName) {
-
-		if (fileName != null) {
-			if (fileName.equalsIgnoreCase("xlsx") || fileName.equalsIgnoreCase("xls")) {
-				return Boolean.TRUE;
-			}
-			return Boolean.FALSE;
-		}
-		return Boolean.FALSE;
-	}
-
-	public File convertMultiPartToFile(MultipartFile file) throws IOException {
-		File convFile = new File(file.getOriginalFilename());
-		FileOutputStream fos = new FileOutputStream(convFile);
-		fos.write(file.getBytes());
-		fos.close();
-		return convFile;
 	}
 
 }

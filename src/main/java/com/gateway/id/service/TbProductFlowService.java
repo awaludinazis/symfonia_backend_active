@@ -15,8 +15,10 @@ import org.springframework.data.domain.Sort;
 
 import com.gateway.id.dao.EbCustomer;
 import com.gateway.id.dao.TbProductFlow;
+import com.gateway.id.dto.DownloadBasicPriceDto;
 import com.gateway.id.dto.LovDistrictDto;
 import com.gateway.id.dto.TbProductFlowDto;
+import com.gateway.id.repository.CommonFunctionRepository;
 import com.gateway.id.repository.EbCustomerRepository;
 import com.gateway.id.repository.TbProductFlowPagingRepository;
 import com.gateway.id.repository.TbProductFlowRepository;
@@ -35,6 +37,9 @@ public class TbProductFlowService {
 
 	@Autowired
 	TbDistrictService districtService;
+
+	@Autowired
+	CommonFunctionRepository commonFunctionRepository;
 
 	public String insertData(List<TbProductFlow> tbProductFlows) {
 
@@ -336,6 +341,15 @@ public class TbProductFlowService {
 				.collect(Collectors.groupingBy(w -> w.getCustomerCode()));
 
 		return result;
+	}
+
+	public List<DownloadBasicPriceDto> downloadData(String customerCode) {
+
+		List<DownloadBasicPriceDto> list = new ArrayList<>();
+
+		list = commonFunctionRepository.getFunctionProductFlow(customerCode);
+
+		return list;
 	}
 
 }
