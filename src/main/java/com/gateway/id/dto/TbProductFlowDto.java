@@ -1,6 +1,5 @@
 package com.gateway.id.dto;
 
-import java.util.Date;
 import java.util.List;
 
 import com.gateway.id.dao.TbProductFlow;

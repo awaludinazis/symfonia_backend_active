@@ -35,6 +35,19 @@ public class TbDistrictService {
 
 	}
 
+	public LovDistrictDto findDistrictName(String flowType, String distCode) {
+		LovDistrictDto dto = new LovDistrictDto();
+		TbDistrict district = new TbDistrict();
+
+		district = districtRepository.findByDistTypeAndDistCode(flowType, distCode);
+		if (district.getDistCode() != null && district.getDistName() != null) {
+			dto.setDistCode(district.getDistCode());
+			dto.setDistName(district.getDistName());
+		}
+
+		return dto;
+	}
+
 	public String findByDistName(String distCode) {
 		String result = "";
 

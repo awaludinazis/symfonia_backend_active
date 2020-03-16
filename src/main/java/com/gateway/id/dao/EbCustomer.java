@@ -4,8 +4,11 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "eb_customer")
@@ -14,6 +17,7 @@ public class EbCustomer {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "eb_customer_id", nullable = false)
 	private Long ebCustomerId;
 
@@ -50,9 +54,6 @@ public class EbCustomer {
 	@Column(name = "reconciliation_email")
 	private String reconciliationEmail;
 
-	@Column(name = "finance_anteraja_email")
-	private String financeAnterajaEmail;
-
 	@Column(name = "reconciliation_add")
 	private String reconciliationAdd;
 
@@ -80,23 +81,35 @@ public class EbCustomer {
 	@Column(name = "vat")
 	private Integer vat;
 
-	@Column(name = "wht23")
-	private Integer wht23;
-
-	@Column(name = "source")
-	private String source;
-
-	@Column(name = "source_code")
-	private String sourceCode;
-
 	@Column(name = "modify_tm")
 	private Date modifyTm;
 
 	@Column(name = "is_active")
 	private Integer isActive;
 
-	@Column(name = "logout_time")
-	private Date logoutTime;
+	@Column(name = "tax")
+	private Integer tax;
+
+	@Column(name = "tipe")
+	private Integer tipe;
+
+	@Column(name = "price")
+	private Integer price;
+
+	@Column(name = "percentage")
+	private Double percentage;
+
+	@Transient
+	private String state;
+
+	@Transient
+	private String startTimeString;
+
+	@Transient
+	private String endTimeString;
+
+	@Transient
+	private String nextBillTimeString;
 
 	public Long getEbCustomerId() {
 		return ebCustomerId;
@@ -194,14 +207,6 @@ public class EbCustomer {
 		this.reconciliationEmail = reconciliationEmail;
 	}
 
-	public String getFinanceAnterajaEmail() {
-		return financeAnterajaEmail;
-	}
-
-	public void setFinanceAnterajaEmail(String financeAnterajaEmail) {
-		this.financeAnterajaEmail = financeAnterajaEmail;
-	}
-
 	public String getReconciliationAdd() {
 		return reconciliationAdd;
 	}
@@ -274,30 +279,6 @@ public class EbCustomer {
 		this.vat = vat;
 	}
 
-	public Integer getWht23() {
-		return wht23;
-	}
-
-	public void setWht23(Integer wht23) {
-		this.wht23 = wht23;
-	}
-
-	public String getSource() {
-		return source;
-	}
-
-	public void setSource(String source) {
-		this.source = source;
-	}
-
-	public String getSourceCode() {
-		return sourceCode;
-	}
-
-	public void setSourceCode(String sourceCode) {
-		this.sourceCode = sourceCode;
-	}
-
 	public Date getModifyTm() {
 		return modifyTm;
 	}
@@ -314,12 +295,68 @@ public class EbCustomer {
 		this.isActive = isActive;
 	}
 
-	public Date getLogoutTime() {
-		return logoutTime;
+	public Integer getTax() {
+		return tax;
 	}
 
-	public void setLogoutTime(Date logoutTime) {
-		this.logoutTime = logoutTime;
+	public void setTax(Integer tax) {
+		this.tax = tax;
+	}
+
+	public Integer getTipe() {
+		return tipe;
+	}
+
+	public void setTipe(Integer tipe) {
+		this.tipe = tipe;
+	}
+
+	public Integer getPrice() {
+		return price;
+	}
+
+	public void setPrice(Integer price) {
+		this.price = price;
+	}
+
+	public Double getPercentage() {
+		return percentage;
+	}
+
+	public void setPercentage(Double percentage) {
+		this.percentage = percentage;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public String getStartTimeString() {
+		return startTimeString;
+	}
+
+	public void setStartTimeString(String startTimeString) {
+		this.startTimeString = startTimeString;
+	}
+
+	public String getEndTimeString() {
+		return endTimeString;
+	}
+
+	public void setEndTimeString(String endTimeString) {
+		this.endTimeString = endTimeString;
+	}
+
+	public String getNextBillTimeString() {
+		return nextBillTimeString;
+	}
+
+	public void setNextBillTimeString(String nextBillTimeString) {
+		this.nextBillTimeString = nextBillTimeString;
 	}
 
 	@Override
@@ -329,12 +366,13 @@ public class EbCustomer {
 				+ customerShortname + ", customerCoprName=" + customerCoprName + ", customerCoprAdd=" + customerCoprAdd
 				+ ", customerBusiness=" + customerBusiness + ", reconciliationName=" + reconciliationName
 				+ ", reconciliationHp=" + reconciliationHp + ", reconciliationTel=" + reconciliationTel
-				+ ", reconciliationEmail=" + reconciliationEmail + ", financeAnterajaEmail=" + financeAnterajaEmail
-				+ ", reconciliationAdd=" + reconciliationAdd + ", startTime=" + startTime + ", endTime=" + endTime
-				+ ", lastBillTm=" + lastBillTm + ", nextBillTm=" + nextBillTm + ", payCycle=" + payCycle
-				+ ", billTitle=" + billTitle + ", billCode=" + billCode + ", vat=" + vat + ", wht23=" + wht23
-				+ ", source=" + source + ", sourceCode=" + sourceCode + ", modifyTm=" + modifyTm + ", isActive="
-				+ isActive + ", logoutTime=" + logoutTime + "]";
+				+ ", reconciliationEmail=" + reconciliationEmail + ", reconciliationAdd=" + reconciliationAdd
+				+ ", startTime=" + startTime + ", endTime=" + endTime + ", lastBillTm=" + lastBillTm + ", nextBillTm="
+				+ nextBillTm + ", payCycle=" + payCycle + ", billTitle=" + billTitle + ", billCode=" + billCode
+				+ ", vat=" + vat + ", modifyTm=" + modifyTm + ", isActive=" + isActive + ", tax=" + tax + ", tipe="
+				+ tipe + ", price=" + price + ", percentage=" + percentage + ", state=" + state + ", startTimeString="
+				+ startTimeString + ", endTimeString=" + endTimeString + ", nextBillTimeString=" + nextBillTimeString
+				+ "]";
 	}
 
 }

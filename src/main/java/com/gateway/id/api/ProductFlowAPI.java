@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +38,8 @@ import com.gateway.id.common.WriteExcelProduct;
 import com.gateway.id.dao.TbProductFlow;
 import com.gateway.id.dao.TbProductFlowHeader;
 import com.gateway.id.dto.DownloadBasicPriceDto;
+import com.gateway.id.dto.FlowDto;
+import com.gateway.id.dto.ListFlowDto;
 import com.gateway.id.dto.TbProductFlowDto;
 import com.gateway.id.service.TbProductFlowHeaderService;
 import com.gateway.id.service.TbProductFlowService;
@@ -51,7 +56,7 @@ public class ProductFlowAPI {
 
 	@Autowired
 	TbProductFlowHeaderService productFlowHeaderService;
-	
+
 	@Value("${server.path}")
 	private String serverPath;
 
@@ -60,16 +65,57 @@ public class ProductFlowAPI {
 		return new ResponseEntity<String>("SUCCESS!!!", HttpStatus.OK);
 	}
 
-	@RequestMapping(path = "/productFlow/insertData", method = RequestMethod.POST)
-	public ResponseEntity<String> createCustomer(@RequestBody TbProductFlowDto listProductFlow) {
+	@RequestMapping(path = "/productFlow/insertDataList", method = RequestMethod.POST)
+	public ResponseEntity<String> insertDataList(@RequestBody ListFlowDto listProductFlow) throws ParseException {
 
 		String result = "";
 		Gson gson = new Gson();
 
-		if (listProductFlow != null && listProductFlow.getProductFlows().size() > 0) {
+		List<TbProductFlow> list = new ArrayList<>();
+
+		SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+
+		if (listProductFlow.getListFlowDtos() != null && listProductFlow.getListFlowDtos().size() > 0) {
+
+			for (FlowDto dto : listProductFlow.getListFlowDtos()) {
+				TbProductFlow productFlow = new TbProductFlow();
+
+				String invalid = dto.getInvalidDate();
+				String valid = dto.getValidDate();
+
+				Date dateinvalid = formatter.parse(invalid);
+				Date datevalid = formatter.parse(valid);
+
+				productFlow.setAgingType(dto.getAgingType());
+				productFlow.setCreatedBy("Admin");
+				productFlow.setCreatedTm(new Date());
+				productFlow.setCurrencyCarry("-1");
+				productFlow.setCurrencyType("IDR");
+				productFlow.setCustomerCode(dto.getCustomerCode());
+				productFlow.setCustomerName(dto.getCustomerName());
+				productFlow.setDestCode(dto.getDestCode());
+				productFlow.setFlowType(dto.getFlowType());
+				productFlow.setInvalidDate(dateinvalid);
+				productFlow.setValidDate(datevalid);
+				productFlow.setIsSale(0);
+				productFlow.setModifiedBy("Admin");
+				productFlow.setModifiedTm(new Date());
+				productFlow.setPayCountry(dto.getPayCountry());
+				productFlow.setPriceCode(dto.getPriceCode());
+				productFlow.setProductCode(dto.getProductCode());
+				productFlow.setRoundTrip(dto.getRoundTrip());
+				productFlow.setSourceCode(dto.getSourceCode());
+				productFlow.setStatus(0);
+
+				list.add(productFlow);
+			}
+
+		}
+
+		if (listProductFlow != null && listProductFlow.getListFlowDtos().size() > 0) {
 			try {
 
-				result = productFlowService.insertData(listProductFlow.getProductFlows());
+				result = productFlowService.insertDataList(list);
 
 				return new ResponseEntity<String>(gson.toJson(result), HttpStatus.OK);
 
@@ -82,24 +128,67 @@ public class ProductFlowAPI {
 		return new ResponseEntity<String>(gson.toJson("Data Kosong Harap Isi Data!"), HttpStatus.FORBIDDEN);
 	}
 
-//	@RequestMapping(path = "/productFlow/getAllData", method = RequestMethod.GET)
-//	public ResponseEntity<String> getAllData() {
-//
-//		List<TbProductFlowDto> flows = new ArrayList<>();
-//		Gson gson = new Gson();
-//		String result = "";
-//
-//		flows = productFlowService.findAll();
-//
-//		if (flows != null && flows.size() > 0) {
-//			result = gson.toJson(flows);
-//
-//			return new ResponseEntity<String>(result, HttpStatus.OK);
-//		} else {
-//			return new ResponseEntity<String>("Gagal Memuat Data!", HttpStatus.BAD_REQUEST);
-//		}
-//
-//	}
+	@RequestMapping(path = "/productFlow/insertData", method = RequestMethod.POST, headers = "Content-Type=application/json")
+	public ResponseEntity<String> insertData(@RequestBody TbProductFlow productFlow) {
+
+		String result = "";
+		Gson gson = new Gson();
+		String origin = "";
+		String destination = "";
+
+		if (productFlow != null && productFlow.getCustomerCode() != null) {
+			if (productFlow.getFlowType().equalsIgnoreCase("2-2")) {
+				origin = productFlow.getSourceCode();
+				destination = productFlow.getDestCode();
+				productFlow.setSourceCode(origin.substring(0, 2));
+				productFlow.setDestCode(destination.substring(0, 2));
+			}
+			if (productFlow.getFlowType().equalsIgnoreCase("3-3")) {
+				origin = productFlow.getSourceCode();
+				destination = productFlow.getDestCode();
+				productFlow.setSourceCode(origin.substring(0, 5));
+				productFlow.setDestCode(destination.substring(0, 5));
+			}
+			if (productFlow.getFlowType().equalsIgnoreCase("4-4")) {
+				origin = productFlow.getSourceCode();
+				destination = productFlow.getDestCode();
+				productFlow.setSourceCode(origin.substring(0, 8));
+				productFlow.setDestCode(destination.substring(0, 8));
+			}
+
+			try {
+
+				result = productFlowService.insertData(productFlow);
+
+				return new ResponseEntity<String>(gson.toJson(result), HttpStatus.OK);
+
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+				return new ResponseEntity<String>(gson.toJson("Gagal Menyimpan Data!"), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<String>(gson.toJson("Data Kosong Harap Isi Data!"), HttpStatus.FORBIDDEN);
+	}
+
+	@RequestMapping(path = "/productFlow/getAllData", method = RequestMethod.GET)
+	public ResponseEntity<String> getAllData() {
+
+		TbProductFlowDto flows = new TbProductFlowDto();
+		Gson gson = new Gson();
+		String result = "";
+
+		flows = productFlowService.getAllData();
+
+		if (flows != null) {
+			result = gson.toJson(flows);
+
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Gagal Memuat Data!", HttpStatus.BAD_REQUEST);
+		}
+
+	}
 
 	@RequestMapping(path = "/productFlow/getById", method = RequestMethod.GET)
 	public ResponseEntity<String> getById(@RequestBody TbProductFlow productFlow) {
@@ -120,37 +209,15 @@ public class ProductFlowAPI {
 
 	}
 
-	@RequestMapping(path = "/productFlow/getDeleteById", method = RequestMethod.POST)
-	public ResponseEntity<Boolean> getDeleteById(@RequestBody TbProductFlow productFlow) {
+	@RequestMapping(path = "/productFlow/getInactiveDataById", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> getInactiveDataById(@RequestParam("id") Integer id) {
 
 		Boolean result = Boolean.FALSE;
 
-		if (productFlow != null) {
+		if (id != null) {
 			try {
-
-				result = productFlowService.deleteDataById(productFlow.getId());
-
-				return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-
-			} catch (Exception e) {
-				LOG.error(e.getMessage());
-				return new ResponseEntity<Boolean>(result, HttpStatus.BAD_REQUEST);
-			}
-		}
-
-		return new ResponseEntity<Boolean>(result, HttpStatus.FORBIDDEN);
-
-	}
-
-	@RequestMapping(path = "/productFlow/deleteStatus", method = RequestMethod.POST)
-	public ResponseEntity<Boolean> deleteStatus(@RequestBody TbProductFlow productFlow) {
-
-		Boolean result = Boolean.FALSE;
-
-		if (productFlow != null) {
-			try {
-
-				result = productFlowService.deleteStatus(productFlow.getId());
+				Long idLong = new Long(id);
+				result = productFlowService.deleteStatusById(idLong);
 
 				return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 
@@ -286,7 +353,7 @@ public class ProductFlowAPI {
 
 			String filepath = excelProduct.generateDataProduct(customerCode, list, serverPath);
 
-			String filename = customerCode + "-" + "basePriceCustomer.xlsx";
+			String filename = customerCode + "_" + "basePriceCustomer.xlsx";
 
 			response.setHeader("Content-disposition", "attachment;filename=" + filename);
 			response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

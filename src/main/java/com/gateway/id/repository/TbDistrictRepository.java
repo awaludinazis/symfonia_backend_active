@@ -11,7 +11,9 @@ import com.gateway.id.dao.TbDistrict;
 public interface TbDistrictRepository extends JpaRepository<TbDistrict, Long> {
 
 	List<TbDistrict> findByDistType(String distType);
-	
+
 	TbDistrict findByDistCode(String distCode);
+
+	TbDistrict findByDistTypeAndDistCode(String flowType, String distCode);
 
 }

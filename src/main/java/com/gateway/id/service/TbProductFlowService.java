@@ -1,7 +1,11 @@
 package com.gateway.id.service;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,7 +45,7 @@ public class TbProductFlowService {
 	@Autowired
 	CommonFunctionRepository commonFunctionRepository;
 
-	public String insertData(List<TbProductFlow> tbProductFlows) {
+	public String insertDataList(List<TbProductFlow> tbProductFlows) {
 
 		String result = "";
 
@@ -92,6 +96,65 @@ public class TbProductFlowService {
 		return result = "SUCCESS UPDATE DATA!";
 	}
 
+	public String insertData(TbProductFlow productFlow) {
+
+		String result = "";
+
+		if (productFlow != null && productFlow.getProductCode() != "" && productFlow.getSourceCode() != ""
+				&& productFlow.getDestCode() != "") {
+			LovDistrictDto valid = validationSave(productFlow);
+
+			if (valid.getDistCode().equalsIgnoreCase("TRUE") && productFlow.getState().equalsIgnoreCase("create")) {
+				return result = "INFO : " + valid.getDistName() + " DATA YANG SAMA TIDAK BOLEH DI INSERT 2x !!!";
+			} else {
+				TbProductFlow flow = new TbProductFlow();
+
+				flow = findById(productFlow.getId());
+
+				if (flow.getId() == 0 || flow.getCustomerCode() == null) {
+
+					productFlow.setCreatedTm(new Date());
+					productFlow.setModifiedTm(new Date());
+					productFlow.setValidDate(productFlow.getValidDate());
+					productFlow.setInvalidDate(productFlow.getInvalidDate());
+					productFlow.setCreatedBy("Admin");
+					productFlow.setModifiedBy("Admin");
+					productFlow.setStatus(0);
+					productFlow.setIsSale(0);
+
+					productFlowRepository.save(productFlow);
+				} else {
+					flow.setAgingType(productFlow.getAgingType());
+					flow.setCreatedBy(productFlow.getCreatedBy());
+					flow.setCreatedTm(productFlow.getCreatedTm());
+					flow.setCurrencyCarry(productFlow.getCurrencyCarry());
+					flow.setCurrencyType(productFlow.getCurrencyType());
+					flow.setCustomerCode(productFlow.getCustomerCode());
+					flow.setDestCode(productFlow.getDestCode());
+					flow.setFlowType(productFlow.getFlowType());
+					flow.setInvalidDate(productFlow.getInvalidDate());
+					flow.setIsSale(productFlow.getIsSale());
+					flow.setModifiedBy(productFlow.getModifiedBy());
+					flow.setModifiedTm(new Date());
+					flow.setPayCountry(productFlow.getPayCountry());
+					flow.setPriceCode(productFlow.getPriceCode());
+					flow.setProductCode(productFlow.getProductCode());
+					flow.setSourceCode(productFlow.getSourceCode());
+					flow.setValidDate(productFlow.getValidDate());
+
+					productFlowRepository.save(flow);
+
+				}
+
+			}
+
+		} else {
+			return result = "DATA KOSONG !";
+		}
+
+		return result = "SUCCESS UPDATE DATA!";
+	}
+
 	private LovDistrictDto validationSave(TbProductFlow productFlow) {
 
 		List<TbProductFlow> list = new ArrayList<>();
@@ -116,73 +179,22 @@ public class TbProductFlowService {
 		return result;
 	}
 
-//	public List<TbProductFlowDto> findAll() {
-//
-//		List<TbProductFlow> list = new ArrayList<>();
-//		List<TbProductFlowDto> result = new ArrayList<>();
-//
-//		list = productFlowRepository.findAll();
-//
-//		if (list != null && list.size() > 0) {
-//
-//			for (TbProductFlow productFlow : list) {
-//				TbProductFlowDto flowDto = new TbProductFlowDto();
-//				String customerName = "";
-//				String customerCode = "";
-//
-//				customerCode = productFlow.getCustomerCode();
-//				customerName = customerService.getCustomerName(customerCode);
-//
-//				flowDto.setAgingType(productFlow.getAgingType());
-//				flowDto.setCreatedBy(productFlow.getCreatedBy());
-//				flowDto.setCreatedTm(productFlow.getCreatedTm());
-//				flowDto.setCurrencyCarry(productFlow.getCurrencyCarry());
-//				flowDto.setCustomerCode(productFlow.getCustomerCode());
-//				flowDto.setCustomerName(customerName);
-//				flowDto.setDestCode(productFlow.getDestCode());
-//				flowDto.setFlowType(productFlow.getFlowType());
-//				flowDto.setId(productFlow.getId());
-//				flowDto.setInvalidDate(productFlow.getInvalidDate());
-//				flowDto.setIsSale(productFlow.getIsSale());
-//				flowDto.setModifiedBy(productFlow.getModifiedBy());
-//				flowDto.setModifiedTm(productFlow.getModifiedTm());
-//				flowDto.setPayCountry(productFlow.getPayCountry());
-//				flowDto.setPriceCode(productFlow.getPriceCode());
-//				flowDto.setProductCode(productFlow.getProductCode());
-//				flowDto.setSourceCode(productFlow.getSourceCode());
-//				flowDto.setStatus(productFlow.getStatus());
-//				flowDto.setValidDate(productFlow.getValidDate());
-//
-//				result.add(flowDto);
-//			}
-//		}
-//
-//		return result;
-//	}
-
-	public Boolean deleteDataById(Long id) {
-
-		if (id != null) {
-			productFlowRepository.deleteById(id);
-
-			return Boolean.TRUE;
-		} else {
-			return Boolean.FALSE;
-		}
-	}
-
-	public Boolean deleteStatus(Long id) {
+	public Boolean deleteStatusById(Long id) {
 
 		TbProductFlow productFlow = new TbProductFlow();
 
 		if (id != null) {
 			productFlow = findById(id);
+			if (productFlow.getSourceCode() != null && productFlow.getDestCode() != null) {
+				// Active status = 1, Inactive = 0
+				productFlow.setStatus(1);
+				productFlow.setModifiedTm(new Date());
+				productFlowRepository.save(productFlow);
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
 
-			// Active status = 1, Inactive = 0
-			productFlow.setStatus(1);
-			productFlowRepository.save(productFlow);
-
-			return Boolean.TRUE;
 		} else {
 			return Boolean.FALSE;
 		}
@@ -262,7 +274,7 @@ public class TbProductFlowService {
 
 		Pageable pageable = PageRequest.of(start, length, direction, column);
 
-		Page<TbProductFlow> page = pagingRepository.findByCustomerCode(pageable, custCode);
+		Page<TbProductFlow> page = pagingRepository.findByCustomerCodeAndStatus(pageable, custCode, 0);
 
 		page.getContent().forEach((tbProductFlow) -> {
 			String customerName = "";
@@ -294,51 +306,31 @@ public class TbProductFlowService {
 
 		Pageable pageable = PageRequest.of(start, length, direction, column);
 
-		Page<TbProductFlow> page = pagingRepository.findByCustomerCode(pageable, customerCode);
+		Page<TbProductFlow> page = pagingRepository.findByCustomerCodeAndStatus(pageable, customerCode, 0);
+
+		page.getContent().forEach((tbProductFlow) -> {
+			String validDate = "";
+			String invalidDate = "";
+			String createdTm = "";
+
+			validDate = convertDate(tbProductFlow.getValidDate());
+			invalidDate = convertDate(tbProductFlow.getInvalidDate());
+			createdTm = convertDate(tbProductFlow.getCreatedTm());
+
+			tbProductFlow.setValidString(validDate);
+			tbProductFlow.setInvalidString(invalidDate);
+			tbProductFlow.setCreateTmString(createdTm);
+
+		});
 
 		return page;
 	}
 
-	private List<TbProductFlow> groupingList(List<TbProductFlow> list) {
-		List<TbProductFlow> result = new ArrayList<>();
-		List<TbProductFlow> resultsda = new ArrayList<>();
-
-		if (list != null) {
-			for (TbProductFlow flow : list) {
-				if (result.size() > 0) {
-					for (TbProductFlow xxx : result) {
-						if (xxx.getCustomerCode().equalsIgnoreCase(flow.getCustomerCode())) {
-							result.add(flow);
-						}
-					}
-				} else {
-					result.add(flow);
-				}
-
-			}
-		}
-
-//		if (list != null && list.size() > 0) {
-//			for (TbProductFlow rates : result) {
-//				Boolean isAvailable = Boolean.FALSE;
-//				for (TbProductFlow customer : list) {
-//					if (result != null) {
-//						if (!rates.getCustomerCode().equalsIgnoreCase(customer.getCustomerCode())) {
-//							resultsda.add(customer);
-//							isAvailable = Boolean.TRUE;
-//						}
-//					}
-//
-//				}
-//				if (!isAvailable) {
-//					result.add(rates);
-//				}
-//			}
-//
-//		}
-
-		Map<String, List<TbProductFlow>> studlistGrouped = list.stream()
-				.collect(Collectors.groupingBy(w -> w.getCustomerCode()));
+	private String convertDate(Date date) {
+		String result = "";
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+		String strDate = dateFormat.format(date);
+		result = strDate;
 
 		return result;
 	}
@@ -348,6 +340,19 @@ public class TbProductFlowService {
 		List<DownloadBasicPriceDto> list = new ArrayList<>();
 
 		list = commonFunctionRepository.getFunctionProductFlow(customerCode);
+
+		return list;
+	}
+
+	public TbProductFlowDto getAllData() {
+		TbProductFlowDto list = new TbProductFlowDto();
+		List<TbProductFlow> products = new ArrayList<>();
+
+		products = productFlowRepository.findAll();
+
+		if (products.size() > 0) {
+			list.setProductFlows(products);
+		}
 
 		return list;
 	}

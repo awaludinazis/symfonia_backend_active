@@ -13,7 +13,7 @@ public interface TbProductFlowPagingRepository extends PagingAndSortingRepositor
 
 	Page<TbProductFlow> findAll(Pageable pageable);
 	
-	Page<TbProductFlow> findByCustomerCode(Pageable pageable, String customerCode);
+	Page<TbProductFlow> findByCustomerCodeAndStatus(Pageable pageable, String customerCode, Integer status);
 	
 	@Query("SELECT pr FROM TbProductFlow pr GROUP BY customerCode")
 	Page<TbProductFlow> getOrderCustomerCode(Pageable pageable);
