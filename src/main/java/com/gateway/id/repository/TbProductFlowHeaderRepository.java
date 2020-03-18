@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.gateway.id.dao.TbDistrict;
 import com.gateway.id.dao.TbProductFlowHeader;
 
 @Repository
@@ -18,5 +19,7 @@ public interface TbProductFlowHeaderRepository extends JpaRepository<TbProductFl
 			+ "and (:customerName is null or c.customerName = :customerName) and (:status is null or c.status = :status)")
 	List<TbProductFlowHeader> search(@Param("customerCode") String customerCode,
 			@Param("customerName") String customerName, @Param("status") Integer status);
+	
+	TbProductFlowHeader findByCustomerCode(String distCode);
 
 }

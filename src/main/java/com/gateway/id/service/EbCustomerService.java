@@ -15,7 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.gateway.id.dao.EbCustomer;
+import com.gateway.id.dao.TbMasterProduct;
 import com.gateway.id.dto.LovCustomerNameDto;
+import com.gateway.id.dto.LovDto;
 import com.gateway.id.repository.EbCustomerPagingRepository;
 import com.gateway.id.repository.EbCustomerRepository;
 
@@ -39,7 +41,7 @@ public class EbCustomerService {
 			if (customer != null && customer.getState() != null) {
 				if (customer.getState().equalsIgnoreCase("create") && ebCustomerDTO.getEbCustomerId() == null
 						&& ebCustomerDTO.getCustomerCode() == null) {
-					
+
 					customer.setLastBillTm(new Date());
 					customer.setModifyTm(new Date());
 					customer.setIsActive(0);
@@ -133,6 +135,41 @@ public class EbCustomerService {
 		}
 
 		return dtos;
+	}
+
+	public List<LovDto> getLovCustomerInput() {
+		List<LovDto> result = new ArrayList<>();
+		List<LovCustomerNameDto> dtos = new ArrayList<>();
+		List<EbCustomer> list = new ArrayList<>();
+
+		list = customerRepository.findAll();
+		if (list != null && list.size() > 0) {
+
+			for (EbCustomer customer : list) {
+				if (customer.getIsActive() == 1 && customer.getCustomerCode() != null) {
+					LovCustomerNameDto nameDto = new LovCustomerNameDto();
+					nameDto.setCustomerCode(customer.getCustomerCode());
+					nameDto.setCustomerName(customer.getCustomerShortname());
+
+					dtos.add(nameDto);
+				}
+
+			}
+
+		}
+
+		if (dtos.size() > 0) {
+			for (LovCustomerNameDto customer : dtos) {
+				LovDto dto = new LovDto();
+
+				dto.setLovCode(customer.getCustomerCode());
+				dto.setLovName(customer.getCustomerName());
+
+				result.add(dto);
+			}
+		}
+
+		return result;
 	}
 
 	public List<EbCustomer> findAll() {

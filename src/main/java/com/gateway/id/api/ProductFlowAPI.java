@@ -171,6 +171,28 @@ public class ProductFlowAPI {
 		return new ResponseEntity<String>(gson.toJson("Data Kosong Harap Isi Data!"), HttpStatus.FORBIDDEN);
 	}
 
+	@RequestMapping(path = "/productFlow/insertHeaderBasicPrice", method = RequestMethod.POST, headers = "Content-Type=application/json")
+	public ResponseEntity<String> insertHeaderBasicPrice(@RequestBody TbProductFlowHeader flowHeader) {
+
+		String result = "";
+		Gson gson = new Gson();
+
+		if (flowHeader != null && flowHeader.getCustomerCode() != null) {
+			try {
+
+				result = productFlowHeaderService.insertHeaderBasicPrice(flowHeader);
+
+				return new ResponseEntity<String>(gson.toJson(result), HttpStatus.OK);
+
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+				return new ResponseEntity<String>(gson.toJson("Gagal Menyimpan Data!"), HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<String>(gson.toJson("Data Kosong Harap Isi Data!"), HttpStatus.FORBIDDEN);
+	}
+
 	@RequestMapping(path = "/productFlow/getAllData", method = RequestMethod.GET)
 	public ResponseEntity<String> getAllData() {
 

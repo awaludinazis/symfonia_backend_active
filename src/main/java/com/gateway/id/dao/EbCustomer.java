@@ -111,6 +111,141 @@ public class EbCustomer {
 	@Transient
 	private String nextBillTimeString;
 
+	@Column(name = "sa_no")
+	private String saNo;
+
+	@Column(name = "request_type")
+	private String requestType;
+
+	@Column(name = "partner_bill_code")
+	private String partnerBillCode;
+
+	@Column(name = "item_type")
+	private String itemType;
+
+	@Column(name = "item_type_others")
+	private String itemTypeOthers;
+
+	@Column(name = "comp_name")
+	private String compName;
+
+	@Column(name = "comp_id_number")
+	private String compIdNumber;
+
+	@Column(name = "comp_industry")
+	private String compIndustry;
+
+	@Column(name = "comp_address")
+	private String compAddress;
+
+	@Column(name = "comp_phone")
+	private String compPhone;
+
+	@Column(name = "comp_no_hp")
+	private String compNoHp;
+
+	@Column(name = "personal_name")
+	private String personalName;
+
+	@Column(name = "personal_job_title")
+	private String personalJobTitle;
+
+	@Column(name = "personal_siup_no")
+	private String personalSiupNo;
+
+	@Column(name = "personal_npwp")
+	private String personalNpwp;
+
+	@Column(name = "personal_email")
+	private String personalEmail;
+
+	@Column(name = "personal_fax_no")
+	private String personalFaxNo;
+
+	@Column(name = "personal_address")
+	private String personalAddress;
+
+	@Column(name = "cs_name")
+	private String csName;
+
+	@Column(name = "cs_address")
+	private String csAddress;
+
+	@Column(name = "cs_contact_name")
+	private String csContactName;
+
+	@Column(name = "cs_hp")
+	private String csHp;
+
+	@Column(name = "cs_email")
+	private String csEmail;
+
+	@Column(name = "finance_name")
+	private String financeName;
+
+	@Column(name = "finance_address")
+	private String financeAddress;
+
+	@Column(name = "finance_contact_name")
+	private String financeContactName;
+
+	@Column(name = "finance_hp")
+	private String financeHp;
+
+	@Column(name = "finance_email")
+	private String financeEmail;
+
+	@Column(name = "service_profile")
+	private String serviceProfile;
+
+	@Column(name = "pickup_address")
+	private String pickupAddress;
+
+	@Column(name = "payment_surcharge")
+	private String paymentSurcharge;
+
+	@Column(name = "payment_billing_cycle")
+	private String paymentBillingCycle;
+
+	@Column(name = "payment_term_of_payment")
+	private String paymentTermOfPayment;
+
+	@Column(name = "doc_company")
+	private String docCompany;
+
+	@Column(name = "doc_personel")
+	private String docPersonel;
+
+	@Column(name = "sign_sales_name	")
+	private String signSalesName;
+
+	@Column(name = "sign_sales_date")
+	private String signSalesDate;
+
+	@Column(name = "sign_vp_sales_name")
+	private String signVpSalesName;
+
+	@Column(name = "sign_vp_sales_date")
+	private String signVpSalesDate;
+
+	@Column(name = "sign_finance_name")
+	private String signFinanceName;
+
+	@Column(name = "sign_finance_date")
+	private String signFinanceDate;
+
+	@Column(name = "sign_vp_finance_name")
+	private String signVpFinanceName;
+
+	@Column(name = "sign_vp_finance_date")
+	private String signVpFinanceDate;
+
+	@Column(name = "partner_sign_date")
+	private String partnerSignDate;
+
+	@Column(name = "status")
+	private String status;
+
 	public Long getEbCustomerId() {
 		return ebCustomerId;
 	}
@@ -359,6 +494,366 @@ public class EbCustomer {
 		this.nextBillTimeString = nextBillTimeString;
 	}
 
+	public String getSaNo() {
+		return saNo;
+	}
+
+	public void setSaNo(String saNo) {
+		this.saNo = saNo;
+	}
+
+	public String getRequestType() {
+		return requestType;
+	}
+
+	public void setRequestType(String requestType) {
+		this.requestType = requestType;
+	}
+
+	public String getPartnerBillCode() {
+		return partnerBillCode;
+	}
+
+	public void setPartnerBillCode(String partnerBillCode) {
+		this.partnerBillCode = partnerBillCode;
+	}
+
+	public String getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+
+	public String getItemTypeOthers() {
+		return itemTypeOthers;
+	}
+
+	public void setItemTypeOthers(String itemTypeOthers) {
+		this.itemTypeOthers = itemTypeOthers;
+	}
+
+	public String getCompName() {
+		return compName;
+	}
+
+	public void setCompName(String compName) {
+		this.compName = compName;
+	}
+
+	public String getCompIdNumber() {
+		return compIdNumber;
+	}
+
+	public void setCompIdNumber(String compIdNumber) {
+		this.compIdNumber = compIdNumber;
+	}
+
+	public String getCompIndustry() {
+		return compIndustry;
+	}
+
+	public void setCompIndustry(String compIndustry) {
+		this.compIndustry = compIndustry;
+	}
+
+	public String getCompAddress() {
+		return compAddress;
+	}
+
+	public void setCompAddress(String compAddress) {
+		this.compAddress = compAddress;
+	}
+
+	public String getCompPhone() {
+		return compPhone;
+	}
+
+	public void setCompPhone(String compPhone) {
+		this.compPhone = compPhone;
+	}
+
+	public String getCompNoHp() {
+		return compNoHp;
+	}
+
+	public void setCompNoHp(String compNoHp) {
+		this.compNoHp = compNoHp;
+	}
+
+	public String getPersonalName() {
+		return personalName;
+	}
+
+	public void setPersonalName(String personalName) {
+		this.personalName = personalName;
+	}
+
+	public String getPersonalJobTitle() {
+		return personalJobTitle;
+	}
+
+	public void setPersonalJobTitle(String personalJobTitle) {
+		this.personalJobTitle = personalJobTitle;
+	}
+
+	public String getPersonalSiupNo() {
+		return personalSiupNo;
+	}
+
+	public void setPersonalSiupNo(String personalSiupNo) {
+		this.personalSiupNo = personalSiupNo;
+	}
+
+	public String getPersonalNpwp() {
+		return personalNpwp;
+	}
+
+	public void setPersonalNpwp(String personalNpwp) {
+		this.personalNpwp = personalNpwp;
+	}
+
+	public String getPersonalEmail() {
+		return personalEmail;
+	}
+
+	public void setPersonalEmail(String personalEmail) {
+		this.personalEmail = personalEmail;
+	}
+
+	public String getPersonalFaxNo() {
+		return personalFaxNo;
+	}
+
+	public void setPersonalFaxNo(String personalFaxNo) {
+		this.personalFaxNo = personalFaxNo;
+	}
+
+	public String getPersonalAddress() {
+		return personalAddress;
+	}
+
+	public void setPersonalAddress(String personalAddress) {
+		this.personalAddress = personalAddress;
+	}
+
+	public String getCsName() {
+		return csName;
+	}
+
+	public void setCsName(String csName) {
+		this.csName = csName;
+	}
+
+	public String getCsAddress() {
+		return csAddress;
+	}
+
+	public void setCsAddress(String csAddress) {
+		this.csAddress = csAddress;
+	}
+
+	public String getCsContactName() {
+		return csContactName;
+	}
+
+	public void setCsContactName(String csContactName) {
+		this.csContactName = csContactName;
+	}
+
+	public String getCsHp() {
+		return csHp;
+	}
+
+	public void setCsHp(String csHp) {
+		this.csHp = csHp;
+	}
+
+	public String getCsEmail() {
+		return csEmail;
+	}
+
+	public void setCsEmail(String csEmail) {
+		this.csEmail = csEmail;
+	}
+
+	public String getFinanceName() {
+		return financeName;
+	}
+
+	public void setFinanceName(String financeName) {
+		this.financeName = financeName;
+	}
+
+	public String getFinanceAddress() {
+		return financeAddress;
+	}
+
+	public void setFinanceAddress(String financeAddress) {
+		this.financeAddress = financeAddress;
+	}
+
+	public String getFinanceContactName() {
+		return financeContactName;
+	}
+
+	public void setFinanceContactName(String financeContactName) {
+		this.financeContactName = financeContactName;
+	}
+
+	public String getFinanceHp() {
+		return financeHp;
+	}
+
+	public void setFinanceHp(String financeHp) {
+		this.financeHp = financeHp;
+	}
+
+	public String getFinanceEmail() {
+		return financeEmail;
+	}
+
+	public void setFinanceEmail(String financeEmail) {
+		this.financeEmail = financeEmail;
+	}
+
+	public String getServiceProfile() {
+		return serviceProfile;
+	}
+
+	public void setServiceProfile(String serviceProfile) {
+		this.serviceProfile = serviceProfile;
+	}
+
+	public String getPickupAddress() {
+		return pickupAddress;
+	}
+
+	public void setPickupAddress(String pickupAddress) {
+		this.pickupAddress = pickupAddress;
+	}
+
+	public String getPaymentSurcharge() {
+		return paymentSurcharge;
+	}
+
+	public void setPaymentSurcharge(String paymentSurcharge) {
+		this.paymentSurcharge = paymentSurcharge;
+	}
+
+	public String getPaymentBillingCycle() {
+		return paymentBillingCycle;
+	}
+
+	public void setPaymentBillingCycle(String paymentBillingCycle) {
+		this.paymentBillingCycle = paymentBillingCycle;
+	}
+
+	public String getPaymentTermOfPayment() {
+		return paymentTermOfPayment;
+	}
+
+	public void setPaymentTermOfPayment(String paymentTermOfPayment) {
+		this.paymentTermOfPayment = paymentTermOfPayment;
+	}
+
+	public String getDocCompany() {
+		return docCompany;
+	}
+
+	public void setDocCompany(String docCompany) {
+		this.docCompany = docCompany;
+	}
+
+	public String getDocPersonel() {
+		return docPersonel;
+	}
+
+	public void setDocPersonel(String docPersonel) {
+		this.docPersonel = docPersonel;
+	}
+
+	public String getSignSalesName() {
+		return signSalesName;
+	}
+
+	public void setSignSalesName(String signSalesName) {
+		this.signSalesName = signSalesName;
+	}
+
+	public String getSignSalesDate() {
+		return signSalesDate;
+	}
+
+	public void setSignSalesDate(String signSalesDate) {
+		this.signSalesDate = signSalesDate;
+	}
+
+	public String getSignVpSalesName() {
+		return signVpSalesName;
+	}
+
+	public void setSignVpSalesName(String signVpSalesName) {
+		this.signVpSalesName = signVpSalesName;
+	}
+
+	public String getSignVpSalesDate() {
+		return signVpSalesDate;
+	}
+
+	public void setSignVpSalesDate(String signVpSalesDate) {
+		this.signVpSalesDate = signVpSalesDate;
+	}
+
+	public String getSignFinanceName() {
+		return signFinanceName;
+	}
+
+	public void setSignFinanceName(String signFinanceName) {
+		this.signFinanceName = signFinanceName;
+	}
+
+	public String getSignFinanceDate() {
+		return signFinanceDate;
+	}
+
+	public void setSignFinanceDate(String signFinanceDate) {
+		this.signFinanceDate = signFinanceDate;
+	}
+
+	public String getSignVpFinanceName() {
+		return signVpFinanceName;
+	}
+
+	public void setSignVpFinanceName(String signVpFinanceName) {
+		this.signVpFinanceName = signVpFinanceName;
+	}
+
+	public String getSignVpFinanceDate() {
+		return signVpFinanceDate;
+	}
+
+	public void setSignVpFinanceDate(String signVpFinanceDate) {
+		this.signVpFinanceDate = signVpFinanceDate;
+	}
+
+	public String getPartnerSignDate() {
+		return partnerSignDate;
+	}
+
+	public void setPartnerSignDate(String partnerSignDate) {
+		this.partnerSignDate = partnerSignDate;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		return "EbCustomer [ebCustomerId=" + ebCustomerId + ", customerCode=" + customerCode + ", customerCodeParent="
@@ -372,7 +867,23 @@ public class EbCustomer {
 				+ ", vat=" + vat + ", modifyTm=" + modifyTm + ", isActive=" + isActive + ", tax=" + tax + ", tipe="
 				+ tipe + ", price=" + price + ", percentage=" + percentage + ", state=" + state + ", startTimeString="
 				+ startTimeString + ", endTimeString=" + endTimeString + ", nextBillTimeString=" + nextBillTimeString
-				+ "]";
+				+ ", saNo=" + saNo + ", requestType=" + requestType + ", partnerBillCode=" + partnerBillCode
+				+ ", itemType=" + itemType + ", itemTypeOthers=" + itemTypeOthers + ", compName=" + compName
+				+ ", compIdNumber=" + compIdNumber + ", compIndustry=" + compIndustry + ", compAddress=" + compAddress
+				+ ", compPhone=" + compPhone + ", compNoHp=" + compNoHp + ", personalName=" + personalName
+				+ ", personalJobTitle=" + personalJobTitle + ", personalSiupNo=" + personalSiupNo + ", personalNpwp="
+				+ personalNpwp + ", personalEmail=" + personalEmail + ", personalFaxNo=" + personalFaxNo
+				+ ", personalAddress=" + personalAddress + ", csName=" + csName + ", csAddress=" + csAddress
+				+ ", csContactName=" + csContactName + ", csHp=" + csHp + ", csEmail=" + csEmail + ", financeName="
+				+ financeName + ", financeAddress=" + financeAddress + ", financeContactName=" + financeContactName
+				+ ", financeHp=" + financeHp + ", financeEmail=" + financeEmail + ", serviceProfile=" + serviceProfile
+				+ ", pickupAddress=" + pickupAddress + ", paymentSurcharge=" + paymentSurcharge
+				+ ", paymentBillingCycle=" + paymentBillingCycle + ", paymentTermOfPayment=" + paymentTermOfPayment
+				+ ", docCompany=" + docCompany + ", docPersonel=" + docPersonel + ", signSalesName=" + signSalesName
+				+ ", signSalesDate=" + signSalesDate + ", signVpSalesName=" + signVpSalesName + ", signVpSalesDate="
+				+ signVpSalesDate + ", signFinanceName=" + signFinanceName + ", signFinanceDate=" + signFinanceDate
+				+ ", signVpFinanceName=" + signVpFinanceName + ", signVpFinanceDate=" + signVpFinanceDate
+				+ ", partnerSignDate=" + partnerSignDate + ", status=" + status + "]";
 	}
 
 }

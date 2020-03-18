@@ -128,5 +128,27 @@ public class LovAPI {
 		}
 
 	}
+	
+	@RequestMapping(path = "/lov/getCustomerInput", method = RequestMethod.POST)
+	public ResponseEntity<String> getCustomerInput() {
+
+		ConvertListLovDto convertListLovDto = new ConvertListLovDto();
+		List<LovDto> lovs = new ArrayList<>();
+		Gson gson = new Gson();
+		String result = "";
+
+		lovs = customerService.getLovCustomerInput();
+
+		if (lovs != null && lovs.size() > 0) {
+			convertListLovDto.setName("lov customer dto");
+			convertListLovDto.setLovDtos(lovs);
+			result = gson.toJson(convertListLovDto);
+
+			return new ResponseEntity<String>(result, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Gagal Memuat Data!", HttpStatus.BAD_REQUEST);
+		}
+
+	}
 
 }
