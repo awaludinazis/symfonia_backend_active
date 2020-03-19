@@ -220,28 +220,28 @@ public class EbCustomer {
 	private String signSalesName;
 
 	@Column(name = "sign_sales_date")
-	private String signSalesDate;
+	private Date signSalesDate;
 
 	@Column(name = "sign_vp_sales_name")
 	private String signVpSalesName;
 
 	@Column(name = "sign_vp_sales_date")
-	private String signVpSalesDate;
+	private Date signVpSalesDate;
 
 	@Column(name = "sign_finance_name")
 	private String signFinanceName;
 
 	@Column(name = "sign_finance_date")
-	private String signFinanceDate;
+	private Date signFinanceDate;
 
 	@Column(name = "sign_vp_finance_name")
 	private String signVpFinanceName;
 
 	@Column(name = "sign_vp_finance_date")
-	private String signVpFinanceDate;
+	private Date signVpFinanceDate;
 
 	@Column(name = "partner_sign_date")
-	private String partnerSignDate;
+	private Date partnerSignDate;
 
 	@Column(name = "status")
 	private String status;
@@ -782,11 +782,11 @@ public class EbCustomer {
 		this.signSalesName = signSalesName;
 	}
 
-	public String getSignSalesDate() {
+	public Date getSignSalesDate() {
 		return signSalesDate;
 	}
 
-	public void setSignSalesDate(String signSalesDate) {
+	public void setSignSalesDate(Date signSalesDate) {
 		this.signSalesDate = signSalesDate;
 	}
 
@@ -798,11 +798,11 @@ public class EbCustomer {
 		this.signVpSalesName = signVpSalesName;
 	}
 
-	public String getSignVpSalesDate() {
+	public Date getSignVpSalesDate() {
 		return signVpSalesDate;
 	}
 
-	public void setSignVpSalesDate(String signVpSalesDate) {
+	public void setSignVpSalesDate(Date signVpSalesDate) {
 		this.signVpSalesDate = signVpSalesDate;
 	}
 
@@ -814,11 +814,11 @@ public class EbCustomer {
 		this.signFinanceName = signFinanceName;
 	}
 
-	public String getSignFinanceDate() {
+	public Date getSignFinanceDate() {
 		return signFinanceDate;
 	}
 
-	public void setSignFinanceDate(String signFinanceDate) {
+	public void setSignFinanceDate(Date signFinanceDate) {
 		this.signFinanceDate = signFinanceDate;
 	}
 
@@ -830,19 +830,19 @@ public class EbCustomer {
 		this.signVpFinanceName = signVpFinanceName;
 	}
 
-	public String getSignVpFinanceDate() {
+	public Date getSignVpFinanceDate() {
 		return signVpFinanceDate;
 	}
 
-	public void setSignVpFinanceDate(String signVpFinanceDate) {
+	public void setSignVpFinanceDate(Date signVpFinanceDate) {
 		this.signVpFinanceDate = signVpFinanceDate;
 	}
 
-	public String getPartnerSignDate() {
+	public Date getPartnerSignDate() {
 		return partnerSignDate;
 	}
 
-	public void setPartnerSignDate(String partnerSignDate) {
+	public void setPartnerSignDate(Date partnerSignDate) {
 		this.partnerSignDate = partnerSignDate;
 	}
 
@@ -885,5 +885,7 @@ public class EbCustomer {
 				+ ", signVpFinanceName=" + signVpFinanceName + ", signVpFinanceDate=" + signVpFinanceDate
 				+ ", partnerSignDate=" + partnerSignDate + ", status=" + status + "]";
 	}
+	
+	
 
 }

@@ -49,6 +49,23 @@ public class EbCustomerService {
 
 					customerRepository.save(customer);
 
+				} else if (customer.getState().equalsIgnoreCase("billing")) {
+					ebCustomerDTO.setBillCode(customer.getBillCode());
+					ebCustomerDTO.setBillTitle(customer.getBillTitle());
+					ebCustomerDTO.setCustomerFullname(customer.getCustomerFullname());
+					ebCustomerDTO.setCustomerShortname(customer.getCustomerShortname());
+					ebCustomerDTO.setEndTime(customer.getEndTime());
+					ebCustomerDTO.setLastBillTm(customer.getLastBillTm());
+					ebCustomerDTO.setModifyTm(new Date());
+					ebCustomerDTO.setNextBillTm(customer.getNextBillTm());
+					ebCustomerDTO.setPercentage(customer.getPercentage());
+					ebCustomerDTO.setPrice(customer.getPrice());
+					ebCustomerDTO.setStartTime(customer.getStartTime());
+					ebCustomerDTO.setTax(customer.getTax());
+					ebCustomerDTO.setVat(customer.getVat());
+
+					customerRepository.save(ebCustomerDTO);
+
 				} else {
 					ebCustomerDTO.setBillCode(customer.getBillCode());
 					ebCustomerDTO.setBillTitle(customer.getBillTitle());
