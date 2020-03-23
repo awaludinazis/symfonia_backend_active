@@ -18,6 +18,14 @@ public class TbHistoryService {
 
 	public String insertHistoryData(TbHistory history) {
 		String result = "";
+		
+//		if(history.getAction().equalsIgnoreCase("create") && history.getRow_id() == null) {
+//			
+//			if(history.getMenu().equalsIgnoreCase("Input Header Basic Price")) {
+//				
+//			}
+//			
+//		}
 
 		if (history != null && history.getMenu() != null) {
 			TbHistory tbHistory = new TbHistory();
@@ -25,7 +33,7 @@ public class TbHistoryService {
 			tbHistory.setAction(history.getAction());
 			tbHistory.setAuditrailDate(new Date());
 			tbHistory.setMenu(history.getMenu());
-			tbHistory.setRow_id(1234);
+			tbHistory.setRow_id(history.getRow_id());
 			tbHistory.setUsername(history.getUsername());
 
 			historyRepository.save(tbHistory);

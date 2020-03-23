@@ -57,6 +57,28 @@ public class CustomerStaticAPI {
 		return new ResponseEntity<String>(gson.toJson("Data Kosong Harap Isi Data!"), HttpStatus.FORBIDDEN);
 	}
 
+	@RequestMapping(path = "/customerStatic/getInactiveDataById", method = RequestMethod.POST)
+	public ResponseEntity<Boolean> getInactiveDataById(@RequestParam("id") Integer id) {
+
+		Boolean result = Boolean.FALSE;
+
+		if (id != null) {
+			try {
+				Long idLong = new Long(id);
+				result = customerService.deleteStatusById(idLong);
+
+				return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+
+			} catch (Exception e) {
+				LOG.error(e.getMessage());
+				return new ResponseEntity<Boolean>(result, HttpStatus.BAD_REQUEST);
+			}
+		}
+
+		return new ResponseEntity<Boolean>(result, HttpStatus.FORBIDDEN);
+
+	}
+
 	@RequestMapping(path = "/customerStatic/pagingSearchParam", method = RequestMethod.POST)
 	public ResponseEntity<String> pagingSearchParam(@RequestParam("start") int start,
 			@RequestParam("length") int length, @RequestParam("sort") String sort,

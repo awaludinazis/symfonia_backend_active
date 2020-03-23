@@ -44,7 +44,7 @@ public class EbCustomerService {
 
 					customer.setLastBillTm(new Date());
 					customer.setModifyTm(new Date());
-					customer.setIsActive(0);
+					customer.setIsActive(2);
 					customer.setCustomerCodeParent(customer.getBillCode());
 
 					customerRepository.save(customer);
@@ -104,6 +104,28 @@ public class EbCustomerService {
 		}
 
 		return result = "SUCCESS UPDATE DATA!";
+	}
+
+	public Boolean deleteStatusById(Long id) {
+
+		EbCustomer customerDto = new EbCustomer();
+
+		if (id != null) {
+			customerDto = findById(id);
+			if (customerDto.getReconciliationName() != null && customerDto.getCustomerBusiness() != null) {
+				// Active status = 1, Inactive = 0, Draft = 2
+				customerDto.setIsActive(0);
+				customerDto.setModifyTm(new Date());
+				customerRepository.save(customerDto);
+				return Boolean.TRUE;
+			} else {
+				return Boolean.FALSE;
+			}
+
+		} else {
+			return Boolean.FALSE;
+		}
+
 	}
 
 	public String getCustomerName(String customerCode) {
